@@ -1,7 +1,7 @@
 # Example MC Client using Apache Fluent
 
 ## Description
-Simple example using Apache Fluent to make a basic auth request to metadata cloud.
+Simple example using ~~Apache Fluent~~ HttpClient to make a basic auth request to metadata cloud.
 
 ### Quickstart
 ```bash
