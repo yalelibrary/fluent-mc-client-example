@@ -4,10 +4,14 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -21,12 +25,11 @@ import java.util.Base64;
  */
 public class App {
 
-
-
     public static void main( String[] args ) throws IOException {
+        useHttpClientBasicParam(args);
         useHttpClient(args);
+        useFluent(args);
     }
-
 
     public static void useFluent( String[] args ) throws IOException {
         String auth = Base64.getEncoder().encodeToString((args[0].trim() + ":" + args[1].trim()).getBytes(StandardCharsets.UTF_8));
@@ -34,7 +37,6 @@ public class App {
         addHeaders(request, auth);
         System.out.println(request.execute().returnContent().asString());
     }
-
 
     public static void useHttpClient(String[] args) throws IOException {
         CloseableHttpClient client;
@@ -50,6 +52,19 @@ public class App {
         byte[] response = client.execute(method, byteArrayResponseHandler);
         System.out.println(new String(response));
     }
+
+    public static void useHttpClientBasicParam(String[] args) throws IOException {
+        CloseableHttpClient client;
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                new UsernamePasswordCredentials(args[0], args[1]));
+        client = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();
+        HttpGet method = new HttpGet("https://metadata-api.library.yale.edu/metadatacloud/api/search?barcode=39002091330184&basic=1");
+        byte[] response = client.execute(method, byteArrayResponseHandler);
+        System.out.println(new String(response));
+    }
+
+
 
     public static ResponseHandler<byte[]> byteArrayResponseHandler = new ResponseHandler<byte[]>() {
         @Override
