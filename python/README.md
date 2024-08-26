@@ -15,4 +15,8 @@ export MC_PASSWORD='xxx'
 python3 requests_example.py
 python3 urllib_example.py  # requires basic=1 parameter to work with urllib HTTPBasicAuthHandler
 python3 urllib_preemptive_example.py
+
+python3 requests_example_marc.py
+python3 urllib_example_marc.py  # requires basic=1 parameter to work with urllib HTTPBasicAuthHandler
+python3 urllib_preemptive_example_marc.py
 ```
