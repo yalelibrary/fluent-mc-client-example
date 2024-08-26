@@ -1,8 +1,8 @@
 import urllib.request
-import json
+from pymarc import Record
 import os
 
-url = 'https://metadata-api.library.yale.edu/metadatacloud/api/aspace/repositories/3/archival_objects/2854335.json?basic=1'
+url = 'https://metadata-api.library.yale.edu/metadatacloud/api/ils/bib/5113455.mrc?basic=1'
 
 user = os.environ['MC_USER']
 password = os.environ['MC_PASSWORD']
@@ -17,4 +17,5 @@ opener = urllib.request.build_opener(auth_handler)
 urllib.request.install_opener(opener)
 
 with urllib.request.urlopen(url) as response:
-    print(json.load(response))
+    record = Record(data=response.read())
+    print(record)
