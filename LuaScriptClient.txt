@@ -1,0 +1,21 @@
+function invokeHTTPGet(url)
+	--Invoke HTTPGet using web client and return stream as output, url example: https://metadata-api-test.library.yale.edu/metadatacloud/alma-search/GetItem.json?pid=23193889750008651&basic=1
+	Log ("     invokeHTTPGet: for URL    ");
+	Log (url);
+	luanet.load_assembly("System");
+	WebClient = luanet.import_type("System.Net.WebClient");
+	NetworkCredential = luanet.import_type("System.Net.NetworkCredential");
+	StreamReader = luanet.import_type("System.IO.StreamReader");
+	myWebClient = WebClient();
+	
+	--  TRY TO PASS username and password for Metadata cloud
+	myCred = NetworkCredential("USERNAME", "PASSWORD");  -- real username and password are NOT included
+	myWebClient.Credentials = myCred;
+
+	myStream = myWebClient:OpenRead(url);
+	sr = StreamReader(myStream);
+	data = sr:ReadToEnd();
+	myStream:Close()
+	--Log (" API Raw Data:    "..bs_data);
+	return data;   -- data here is a string of either XML or JSON based on the what the "url" asks for
+end
